@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyễn Thị Như Huế</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7e2 100%);
+            overflow-x: hidden;
+            color: #4a5568;
+        }
+
+        .cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Canvas pháo hoa */
+        #fireworks-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* Trái tim bay */
+        .heart {
+            position: fixed;
+            color: rgba(255,105,180,0.3);
+            animation: float 10s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+
+        /* Nút nhạc */
+        #music-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #f687b3;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(246, 135, 179, 0.5);
+            border: 3px solid white;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .music-playing {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+.gift-box {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #fbb6ce, #f687b3);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(246,135,179,0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+}
+
+.gift-box:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(246,135,179,0.6);
+}
+
+.gift-opened {
+    background: white;
+    font-size: 16px;
+    padding: 12px;
+    text-align: center;
+    color: #d53f8c;
+    cursor: default;
+}
+
+    </style>
+</head>
+
+<body>
+
+<canvas id="fireworks-canvas"></canvas>
+
+<!-- Nhạc -->
+<audio id="bg-music" loop>
+    <source src="nhac.mp3" type="audio/mpeg">
+</audio>
+
+<button id="music-toggle" onclick="toggleMusic()">🎵</button>
+
+<div class="relative z-10 min-h-screen flex flex-col items-center px-4 py-12">
+
+    <!-- Avatar -->
+    <div class="text-center mb-12">
+        <div class="w-40 h-40 mx-auto rounded-full overflow-hidden border-8 border-white shadow-2xl mb-6">
+            <img src="1.jpg" class="w-full h-full object-cover">
+        </div>
+        <h1 class="cursive text-6xl text-pink-600">Nguyễn Thị Như Huế</h1>
+        <p class="italic text-gray-500 mt-2">Thiên thần áo trắng tại Bệnh viện E</p>
+    </div>
+
+    <!-- About -->
+    <div class="glass-card p-10 max-w-xl text-center mb-16 shadow-2xl">
+        <h2 class="cursive text-4xl text-pink-500 mb-6">Về Tôi</h2>
+        <p class="text-lg italic">
+            Với sự tận tâm và tình yêu nghề, Huế luôn mang đến sự chăm sóc
+            nhẹ nhàng, chu đáo và tràn đầy năng lượng tích cực.
+        </p>
+    </div>
+
+    <!-- SLIDER -->
+    <div class="glass-card p-6 w-full max-w-4xl shadow-2xl">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+
+            <!-- Ảnh -->
+            <div class="relative overflow-hidden rounded-xl">
+                <div id="slider" class="flex transition-transform duration-500 ease-out">
+                    <img src="1.jpg" class="w-full flex-shrink-0">
+                    <img src="2.jpg" class="w-full flex-shrink-0">
+                    <img src="3.jpg" class="w-full flex-shrink-0">
+                </div>
+
+                <button onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-1 rounded-full">‹</button>
+                <button onclick="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-1 rounded-full">›</button>
+            </div>
+
+            <!-- Nội dung -->
+            <div class="px-4 text-center md:text-left">
+                <h3 id="slide-title" class="cursive text-4xl text-pink-600 mb-4">
+                    Nét dịu dàng
+                </h3>
+                <p id="slide-desc" class="text-lg italic text-gray-600 leading-relaxed">
+                    Vẻ đẹp nhẹ nhàng, tinh khôi như buổi sáng yên bình.
+                </p>
+            </div>
+
+        </div>
+
+<!-- GIFTS -->
+<div class="mt-20 text-center">
+    <h2 class="cursive text-4xl text-pink-500 mb-8">🎁 Món quà bí mật</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 justify-center">
+        <div class="gift-box" onclick="openGift(this)">🎁</div>
+        <div class="gift-box" onclick="openGift(this)">🎁</div>
+        <div class="gift-box" onclick="openGift(this)">🎁</div>
+        <div class="gift-box" onclick="openGift(this)">🎁</div>
+    </div>
+
+    <p class="mt-6 italic text-gray-500">Mỗi hộp quà chỉ mở một lần 💝</p>
+</div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-gray-400 text-sm">
+        Ai đó thiết kế dành riêng cho Như Huế • 2026 ❤
+    </footer>
+
+</div>
+
+<script>
+    /* Slider */
+    const slider = document.getElementById('slider');
+    let currentIndex = 0;
+
+    const contents = [
+        {
+            title: "Nét dịu dàng",
+            desc: "Vẻ đẹp nhẹ nhàng, tinh khôi như buổi sáng yên bình."
+        },
+        {
+            title: "Nụ cười hạnh phúc",
+            desc: "Nụ cười mang theo sự ấm áp và năng lượng tích cực."
+        },
+        {
+            title: "Trái tim nhiệt huyết",
+            desc: "Sự tận tâm và yêu nghề luôn tỏa sáng."
+        }
+    ];
+
+    function updateSlide() {
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        document.getElementById('slide-title').innerText = contents[currentIndex].title;
+        document.getElementById('slide-desc').innerText = contents[currentIndex].desc;
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % contents.length;
+        updateSlide();
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + contents.length) % contents.length;
+        updateSlide();
+    }
+
+    /* Swipe mobile */
+    let startX = 0;
+    slider.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    slider.addEventListener('touchend', e => {
+        let endX = e.changedTouches[0].clientX;
+        if (startX - endX > 50) nextSlide();
+        if (endX - startX > 50) prevSlide();
+    });
+
+    /* Nhạc */
+    const audio = document.getElementById('bg-music');
+    const btn = document.getElementById('music-toggle');
+    let playing = false;
+
+    function toggleMusic() {
+        if (playing) {
+            audio.pause();
+            btn.classList.remove('music-playing');
+        } else {
+            audio.play();
+            btn.classList.add('music-playing');
+        }
+        playing = !playing;
+    }
+
+    /* Trái tim */
+    setInterval(() => {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.innerText = '❤';
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.fontSize = Math.random() * 12 + 12 + 'px';
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 10000);
+    }, 1200);
+
+/* ================== FIREWORKS ================== */
+const canvas = document.getElementById("fireworks-canvas");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.radius = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 6;
+        this.speedY = (Math.random() - 0.5) * 6;
+        this.life = 100;
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
+
+let particles = [];
+
+function createFirework() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.5;
+    const colors = ["#ff69b4", "#ffd1dc", "#ffb6c1", "#ffffff"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    for (let i = 0; i < 40; i++) {
+        particles.push(new Particle(x, y, color));
+    }
+}
+
+function animateFireworks() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles = particles.filter(p => p.life > 0);
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+
+    requestAnimationFrame(animateFireworks);
+}
+
+setInterval(createFirework, 400);
+animateFireworks();
+/* =============================================== */
+
+const giftContents = [
+    "💖 Làm một câu thơ",
+    "🌸 Một lời chúc",
+    "☕ Một ly trà sữa",
+    "💌 Gửi tiền",
+    "🌷 Tặng một bông hoa",
+    "✨ Điều ước nhỏ sẽ sớm thành hiện thực",
+    "🎶 Hát một câu",
+    "📸 Chụp một bức ảnh",
+    "💫 Airdrop một bức ảnh",
+    "🌈 Nói tên wifi đang bắt",
+    "🕊️ Chúc bạn may mắn lần sau",
+    "🍰 Tặng một chiếc bánh",
+    "💐 Một lời khen chân thành",
+    "🔥 Nói một điều ước",
+    "💎 Một chiếc nhẫn",
+    "🌙 Chúc ngủ ngon",
+    "💞 Một cái ôm ấm áp từ xa",
+    "🌟 Bạn chính là ánh sáng của ai đó",
+    "📖 Kể một câu chuyện",
+    "❤️ Chỉ có mỗi trái tim"
+];
+
+function openGift(box) {
+    if (box.classList.contains("gift-opened")) return;
+
+    const randomIndex = Math.floor(Math.random() * giftContents.length);
+    const content = giftContents.splice(randomIndex, 1)[0];
+
+    box.classList.add("gift-opened");
+    box.innerText = content;
+
+    // pháo hoa nhẹ khi mở quà
+    createFirework();
+}
+</script>
+
+</body>
+</html>
